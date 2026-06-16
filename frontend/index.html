@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketing Agent</title>
+<style>
+/* ─── RESET & BASE ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0f1117;
+  color: #e2e8f0;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: 240px;
+  background: #161929;
+  border-right: 1px solid #2a2f45;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+}
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid #2a2f45;
+}
+.sidebar-header h1 {
+  font-size: 1.1rem;
+  color: #f1f5f9;
+  font-weight: 600;
+}
+.sidebar-header p {
+  font-size: .75rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+.sidebar nav {
+  flex: 1;
+  padding: 12px 0;
+}
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: .875rem;
+  transition: background .15s, color .15s;
+}
+.sidebar nav a:hover { background: #1e2235; color: #e2e8f0; }
+.sidebar nav a.active { background: #222639; color: #3b82f6; border-right: 3px solid #3b82f6; }
+.sidebar nav a .icon { width: 18px; text-align: center; font-size: 1rem; }
+
+/* ─── MAIN ─── */
+.main {
+  margin-left: 240px;
+  flex: 1;
+  padding: 28px 36px;
+  min-height: 100vh;
+}
+.main h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #f1f5f9;
+}
+
+/* ─── CARDS ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: #222639;
+  border: 1px solid #2a2f45;
+  border-radius: 10px;
+  padding: 18px;
+}
+.stat-card .label {
+  font-size: .75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.stat-card .value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-top: 6px;
+  color: #f1f5f9;
+}
+.stat-card.accent .value { color: #3b82f6; }
+.stat-card.green .value { color: #22c55e; }
+.stat-card.amber .value { color: #f59e0b; }
+.stat-card.red .value { color: #ef4444; }
+
+/* ─── TABLES ─── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #222639;
+  border-radius: 10px;
+  overflow: hidden;
+}
+thead th {
+  background: #1a1e30;
+  padding: 10px 14px;
+  text-align: left;
+  font-size: .75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  border-bottom: 1px solid #2a2f45;
+}
+tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #1e2235;
+  font-size: .85rem;
+}
+tbody tr:hover { background: #1e2235; }
+tbody tr:last-child td { border-bottom: none; }
+
+/* ─── BADGES ─── */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: .7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.badge-blue { background: #1e3a5f; color: #60a5fa; }
+.badge-green { background: #14532d; color: #4ade80; }
+.badge-amber { background: #451a03; color: #fbbf24; }
+.badge-red { background: #450a0a; color: #f87171; }
+.badge-gray { background: #1e293b; color: #94a3b8; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+.btn:hover { opacity: .85; }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.btn-primary { background: #3b82f6; color: #fff; }
+.btn-green { background: #22c55e; color: #fff; }
+.btn-red { background: #ef4444; color: #fff; }
+.btn-outline {
+  background: transparent;
+  border: 1px solid #3b82f6;
+  color: #3b82f6;
+}
+.btn-sm { padding: 5px 10px; font-size: .75rem; }
+
+/* ─── FILTERS BAR ─── */
+.filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.filters select, .filters input {
+  background: #1a1e30;
+  border: 1px solid #2a2f45;
+  color: #e2e8f0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: .85rem;
+}
+.filters label {
+  font-size: .8rem;
+  color: #94a3b8;
+}
+
+/* ─── PREVIEW CARD ─── */
+.preview-card {
+  background: #222639;
+  border: 1px solid #2a2f45;
+  border-radius: 10px;
+  padding: 22px;
+  margin-top: 16px;
+}
+.preview-card h3 {
+  font-size: .95rem;
+  color: #f1f5f9;
+  margin-bottom: 14px;
+}
+.preview-card .field-label {
+  font-size: .75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+.preview-card .field-value {
+  background: #1a1e30;
+  border: 1px solid #2a2f45;
+  border-radius: 6px;
+  padding: 12px;
+  white-space: pre-wrap;
+  font-size: .85rem;
+  line-height: 1.5;
+}
+.preview-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* ─── FEEDBACK INPUT ─── */
+.feedback-box {
+  margin-top: 12px;
+  display: none;
+}
+.feedback-box textarea {
+  width: 100%;
+  background: #1a1e30;
+  border: 1px solid #2a2f45;
+  color: #e2e8f0;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: .85rem;
+  resize: vertical;
+  min-height: 60px;
+}
+.feedback-box .fb-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* ─── TOAST ─── */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast {
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: .85rem;
+  font-weight: 500;
+  animation: slideIn .3s;
+  max-width: 360px;
+}
+.toast-success { background: #14532d; color: #4ade80; border: 1px solid #22c55e; }
+.toast-error { background: #450a0a; color: #f87171; border: 1px solid #ef4444; }
+.toast-info { background: #1e3a5f; color: #60a5fa; border: 1px solid #3b82f6; }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* ─── MODAL ─── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,.6);
+  z-index: 50;
+  justify-content: center;
+  align-items: center;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: #222639;
+  border: 1px solid #2a2f45;
+  border-radius: 12px;
+  padding: 28px;
+  max-width: 640px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal h3 {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  color: #f1f5f9;
+}
+.modal .close-btn {
+  float: right;
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* ─── SPINNER ─── */
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #2a2f45;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin .6s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-msg {
+  color: #94a3b8;
+  font-size: .85rem;
+  padding: 20px 0;
+}
+
+/* ─── SECTION ─── */
+.section { display: none; }
+.section.active { display: block; }
+
+/* ─── QUEUE CARDS ─── */
+.queue-card {
+  background: #222639;
+  border: 1px solid #2a2f45;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 12px;
+}
+.queue-card h4 {
+  font-size: .9rem;
+  color: #f1f5f9;
+  margin-bottom: 8px;
+}
+.queue-card p {
+  font-size: .8rem;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+/* ─── EMPTY STATE ─── */
+.empty-state {
+  text-align: center;
+  color: #64748b;
+  padding: 40px;
+  font-size: .9rem;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .sidebar { width: 60px; }
+  .sidebar-header h1, .sidebar-header p, .sidebar nav a span { display: none; }
+  .sidebar nav a { justify-content: center; padding: 12px; }
+  .main { margin-left: 60px; padding: 16px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h1>Marketing Agent</h1>
+    <p>Email Outreach</p>
+  </div>
+  <nav>
+    <a href="#dashboard" class="active" data-section="dashboard">
+      <span class="icon">&#9632;</span><span>Panel de Control</span>
+    </a>
+    <a href="#leads" data-section="leads">
+      <span class="icon">&#9782;</span><span>Leads</span>
+    </a>
+    <a href="#generate" data-section="generate">
+      <span class="icon">&#9889;</span><span>Generar Contenido</span>
+    </a>
+    <a href="#review" data-section="review">
+      <span class="icon">&#9998;</span><span>Cola de Revision</span>
+    </a>
+    <a href="#send" data-section="send">
+      <span class="icon">&#9993;</span><span>Enviar Emails</span>
+    </a>
+    <a href="#history" data-section="history">
+      <span class="icon">&#9201;</span><span>Historial</span>
+    </a>
+  </nav>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toasts"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <button class="close-btn" onclick="closeModal()">&times;</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <div class="section active" id="sec-dashboard">
+    <h2>Panel de Control</h2>
+    <div class="stats-grid" id="stats-grid">
+      <div class="loading-msg"><span class="spinner"></span>Cargando estadisticas...</div>
+    </div>
+
+    <!-- AUTOPILOT -->
+    <div style="margin-top:24px;">
+      <h3 style="font-size:1rem;color:#f1f5f9;margin-bottom:12px;">Autopilot</h3>
+      <div class="filters" style="margin-bottom:12px;">
+        <label>Tier:</label>
+        <select id="ap-tier">
+          <option value="">Todos</option>
+          <option value="1">Tier 1</option>
+          <option value="2">Tier 2</option>
+          <option value="3">Tier 3</option>
+        </select>
+        <label>ICP Rank:</label>
+        <select id="ap-icp">
+          <option value="">Todos</option>
+          <option value="1">Rank 1</option>
+          <option value="2">Rank 2</option>
+          <option value="3">Rank 3</option>
+        </select>
+        <button class="btn btn-primary" id="ap-btn" onclick="runAutopilot()">Ejecutar Autopilot</button>
+      </div>
+      <div id="ap-result"></div>
+    </div>
+  </div>
+
+  <!-- ═══ LEADS ═══ -->
+  <div class="section" id="sec-leads">
+    <h2>Leads</h2>
+    <div class="filters">
+      <label>Tier:</label>
+      <select id="filter-tier">
+        <option value="">Todos</option>
+        <option value="1">Tier 1</option>
+        <option value="2">Tier 2</option>
+        <option value="3">Tier 3</option>
+      </select>
+      <label>ICP Rank:</label>
+      <select id="filter-icp">
+        <option value="">Todos</option>
+        <option value="1">Rank 1</option>
+        <option value="2">Rank 2</option>
+        <option value="3">Rank 3</option>
+      </select>
+      <button class="btn btn-primary btn-sm" onclick="loadLeads()">Filtrar</button>
+    </div>
+    <div id="leads-table"><div class="loading-msg"><span class="spinner"></span>Cargando leads...</div></div>
+  </div>
+
+  <!-- ═══ GENERATE ═══ -->
+  <div class="section" id="sec-generate">
+    <h2>Generar Contenido</h2>
+    <div class="filters">
+      <label>Selecciona un lead:</label>
+      <select id="gen-lead-select" style="min-width:300px">
+        <option value="">-- Seleccionar lead --</option>
+      </select>
+      <button class="btn btn-primary btn-sm" id="gen-btn" onclick="generateContent()">Generar</button>
+    </div>
+    <div id="gen-result"></div>
+  </div>
+
+  <!-- ═══ REVIEW ═══ -->
+  <div class="section" id="sec-review">
+    <h2>Cola de Revision</h2>
+    <div id="review-list"><div class="loading-msg"><span class="spinner"></span>Cargando pendientes...</div></div>
+  </div>
+
+  <!-- ═══ SEND ═══ -->
+  <div class="section" id="sec-send">
+    <h2>Enviar Emails</h2>
+    <div style="margin-bottom:14px;">
+      <button class="btn btn-green btn-sm" id="batch-send-btn" onclick="sendBatch()">Enviar Todos</button>
+    </div>
+    <div id="send-list"><div class="loading-msg"><span class="spinner"></span>Cargando aprobados...</div></div>
+  </div>
+
+  <!-- ═══ HISTORY ═══ -->
+  <div class="section" id="sec-history">
+    <h2>Historial</h2>
+    <div id="history-table"><div class="loading-msg"><span class="spinner"></span>Cargando historial...</div></div>
+  </div>
+
+</div>
+
+<script>
+/* ─── API HELPER ─── */
+async function api(path, opts = {}) {
+  const url = path.startsWith('http') ? path : path;
+  const fetchOpts = { headers: { 'Content-Type': 'application/json' }, ...opts };
+  if (opts.body && typeof opts.body === 'object') fetchOpts.body = JSON.stringify(opts.body);
+  const res = await fetch(url, fetchOpts);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.detail || `Error ${res.status}`);
+  return data;
+}
+
+/* ─── TOAST ─── */
+function toast(msg, type = 'info') {
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  el.textContent = msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
+
+/* ─── MODAL ─── */
+function openModal(html) {
+  document.getElementById('modal-content').innerHTML = html;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('show');
+}
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+/* ─── NAV ─── */
+function navigate(section) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+  const sec = document.getElementById('sec-' + section);
+  if (sec) sec.classList.add('active');
+  const link = document.querySelector(`[data-section="${section}"]`);
+  if (link) link.classList.add('active');
+  // Load data for section
+  const loaders = {
+    dashboard: loadDashboard,
+    leads: loadLeads,
+    generate: loadGenerateOptions,
+    review: loadReview,
+    send: loadUnsent,
+    history: loadHistory,
+  };
+  if (loaders[section]) loaders[section]();
+}
+
+window.addEventListener('hashchange', () => {
+  const hash = location.hash.replace('#', '') || 'dashboard';
+  navigate(hash);
+});
+
+/* ─── BADGE HELPER ─── */
+function tierBadge(t) {
+  const colors = { '1': 'blue', '2': 'amber', '3': 'green' };
+  return `<span class="badge badge-${colors[String(t)] || 'gray'}">Tier ${t}</span>`;
+}
+function statusBadge(status) {
+  const map = {
+    pending: ['Pendiente', 'amber'],
+    yes: ['Aprobado', 'green'],
+    no: ['Rechazado', 'red'],
+    sent: ['Enviado', 'blue'],
+  };
+  const [label, color] = map[String(status).toLowerCase()] || [status, 'gray'];
+  return `<span class="badge badge-${color}">${label}</span>`;
+}
+
+/* ─── ESCAPE HTML ─── */
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = String(str || '');
+  return d.innerHTML;
+}
+
+/* ═══════════════════════════════════════════
+   DASHBOARD
+   ═══════════════════════════════════════════ */
+async function loadDashboard() {
+  try {
+    const s = await api('/api/stats');
+    document.getElementById('stats-grid').innerHTML = `
+      <div class="stat-card accent"><div class="label">Total Leads</div><div class="value">${s.total_leads}</div></div>
+      <div class="stat-card"><div class="label">Contenido Generado</div><div class="value">${s.total_generated}</div></div>
+      <div class="stat-card green"><div class="label">Aprobados</div><div class="value">${s.approved}</div></div>
+      <div class="stat-card red"><div class="label">Rechazados</div><div class="value">${s.rejected}</div></div>
+      <div class="stat-card amber"><div class="label">Pendientes</div><div class="value">${s.pending}</div></div>
+      <div class="stat-card accent"><div class="label">Emails Enviados</div><div class="value">${s.sent}</div></div>
+      <div class="stat-card"><div class="label">Aprobados sin Enviar</div><div class="value">${s.unsent}</div></div>
+    `;
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+/* ═══════════════════════════════════════════
+   LEADS
+   ═══════════════════════════════════════════ */
+async function loadLeads() {
+  const tier = document.getElementById('filter-tier').value;
+  const icp = document.getElementById('filter-icp').value;
+  let url = '/api/leads?';
+  if (tier) url += `tier=${tier}&`;
+  if (icp) url += `icp_rank=${icp}&`;
+  try {
+    const leads = await api(url);
+    if (!leads.length) {
+      document.getElementById('leads-table').innerHTML = '<div class="empty-state">No se encontraron leads con esos filtros.</div>';
+      return;
+    }
+    let html = `<table><thead><tr>
+      <th>ID</th><th>Contacto</th><th>Empresa</th><th>Titulo</th><th>Tier</th><th>ICP</th><th>Industria</th><th>Estado</th><th>Accion</th>
+    </tr></thead><tbody>`;
+    for (const l of leads) {
+      const hasOutput = l.has_output;
+      html += `<tr>
+        <td>${esc(l.id)}</td>
+        <td>${esc(l.contact_name)}</td>
+        <td>${esc(l.company_name)}</td>
+        <td>${esc(l.title_contact)}</td>
+        <td>${tierBadge(l.tier)}</td>
+        <td>${esc(l.icp_rank)}</td>
+        <td>${esc(l.industry)}</td>
+        <td>${hasOutput ? '<span class="badge badge-green">Generado</span>' : '<span class="badge badge-gray">Nuevo</span>'}</td>
+        <td>${hasOutput
+          ? `<button class="btn btn-red btn-sm" onclick="deleteOutput('${esc(l.id)}', loadLeads)">Borrar</button>`
+          : `<button class="btn btn-primary btn-sm" onclick="goGenerate('${esc(l.id)}')">Generar</button>`
+        }</td>
+      </tr>`;
+    }
+    html += '</tbody></table>';
+    document.getElementById('leads-table').innerHTML = html;
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+function goGenerate(leadId) {
+  location.hash = '#generate';
+  setTimeout(() => {
+    const sel = document.getElementById('gen-lead-select');
+    if (sel) sel.value = leadId;
+  }, 200);
+}
+
+/* ═══════════════════════════════════════════
+   GENERATE
+   ═══════════════════════════════════════════ */
+async function loadGenerateOptions() {
+  try {
+    const leads = await api('/api/leads');
+    const sel = document.getElementById('gen-lead-select');
+    const current = sel.value;
+    sel.innerHTML = '<option value="">-- Seleccionar lead --</option>';
+    for (const l of leads) {
+      if (l.has_output) continue;
+      const opt = document.createElement('option');
+      opt.value = l.id;
+      opt.textContent = `${l.id} | ${l.contact_name} | ${l.company_name} | Tier ${l.tier}`;
+      sel.appendChild(opt);
+    }
+    if (current) sel.value = current;
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+// Holds the latest generation result for approve/regenerate
+let currentGeneration = null;
+
+async function generateContent() {
+  const leadId = document.getElementById('gen-lead-select').value;
+  if (!leadId) { toast('Selecciona un lead primero', 'error'); return; }
+
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Generando...';
+  document.getElementById('gen-result').innerHTML = '<div class="loading-msg"><span class="spinner"></span>Generando contenido...</div>';
+
+  try {
+    const data = await api('/api/generate', { method: 'POST', body: { lead_id: leadId } });
+    currentGeneration = data;
+    renderPreview(data);
+    toast('Contenido generado', 'success');
+  } catch (e) {
+    document.getElementById('gen-result').innerHTML = '';
+    toast(e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Generar';
+  }
+}
+
+function renderPreview(data) {
+  const isTier3 = String(data.tier) === '3';
+  const failuresHtml = data.failures && data.failures.length
+    ? `<div style="margin-top:10px;color:#f59e0b;font-size:.8rem;">
+         <strong>Advertencias de validacion:</strong><br>
+         ${data.failures.map(f => `- ${esc(f)}`).join('<br>')}
+       </div>`
+    : '';
+
+  let html = `
+    <div class="preview-card">
+      <h3>${esc(data.content.email_subject || '')}</h3>
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        ${tierBadge(data.tier)}
+        <span class="badge badge-${data.method === 'ai' ? 'blue' : 'amber'}">${data.method === 'ai' ? 'IA' : 'Template'}</span>
+        ${data.validation_passed ? '<span class="badge badge-green">Validado</span>' : '<span class="badge badge-amber">Con advertencias</span>'}
+      </div>
+      <div class="field-label">Asunto</div>
+      <div class="field-value">${esc(data.content.email_subject)}</div>
+      <div class="field-label">Cuerpo del Email</div>
+      <div class="field-value">${esc(data.content.email_body)}</div>
+      ${failuresHtml}
+      <div class="preview-actions">
+        <button class="btn btn-green" onclick="approveGenerated(true)">Aprobar</button>
+        <button class="btn btn-red" onclick="approveGenerated(false)">Rechazar</button>
+        ${isTier3 ? '<button class="btn btn-outline" onclick="showFeedback()">Regenerar con Feedback</button>' : ''}
+        <button class="btn btn-outline" style="border-color:#ef4444;color:#ef4444;" onclick="discardGenerated()">Descartar</button>
+      </div>
+      <div class="feedback-box" id="feedback-box">
+        <textarea id="feedback-text" placeholder="Ej: 'mas corto', 'tono informal', 'mencionar su industria'..."></textarea>
+        <div class="fb-actions">
+          <button class="btn btn-primary btn-sm" onclick="regenerateContent()">Regenerar</button>
+          <button class="btn btn-outline btn-sm" onclick="hideFeedback()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('gen-result').innerHTML = html;
+}
+
+function showFeedback() {
+  document.getElementById('feedback-box').style.display = 'block';
+}
+function hideFeedback() {
+  document.getElementById('feedback-box').style.display = 'none';
+}
+
+async function approveGenerated(approved) {
+  if (!currentGeneration) return;
+  try {
+    await api('/api/approve', {
+      method: 'POST',
+      body: { lead_id: currentGeneration.lead_id, approved },
+    });
+    toast(approved ? 'Contenido aprobado' : 'Contenido rechazado', approved ? 'success' : 'info');
+    currentGeneration = null;
+    document.getElementById('gen-result').innerHTML = '<div class="empty-state">Contenido procesado. Selecciona otro lead.</div>';
+    loadGenerateOptions();
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+async function discardGenerated() {
+  if (!currentGeneration) return;
+  try {
+    await api('/api/discard', {
+      method: 'POST',
+      body: { lead_id: currentGeneration.lead_id },
+    });
+    toast('Contenido descartado', 'info');
+    currentGeneration = null;
+    document.getElementById('gen-result').innerHTML = '<div class="empty-state">Contenido descartado. Selecciona otro lead.</div>';
+    loadGenerateOptions();
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+async function deleteOutput(leadId, reloadFn) {
+  if (!confirm('Seguro que quieres borrar este contenido?')) return;
+  try {
+    await api('/api/delete', { method: 'POST', body: { lead_id: leadId } });
+    toast('Contenido borrado', 'info');
+    if (reloadFn) reloadFn();
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+async function regenerateContent() {
+  if (!currentGeneration) return;
+  const feedback = document.getElementById('feedback-text').value.trim();
+  if (!feedback) { toast('Escribe feedback para regenerar', 'error'); return; }
+
+  document.getElementById('gen-result').innerHTML = '<div class="loading-msg"><span class="spinner"></span>Regenerando con feedback...</div>';
+
+  try {
+    const data = await api('/api/regenerate', {
+      method: 'POST',
+      body: { lead_id: currentGeneration.lead_id, feedback },
+    });
+    currentGeneration = data;
+    renderPreview(data);
+    toast('Contenido regenerado', 'success');
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+/* ═══════════════════════════════════════════
+   REVIEW
+   ═══════════════════════════════════════════ */
+async function loadReview() {
+  try {
+    const pending = await api('/api/pending');
+    const container = document.getElementById('review-list');
+    if (!pending.length) {
+      container.innerHTML = '<div class="empty-state">No hay aprobaciones pendientes.</div>';
+      return;
+    }
+    let html = '';
+    for (const row of pending) {
+      html += `
+        <div class="queue-card">
+          <h4>${esc(row['Contact Name'])} <span style="color:#64748b;font-weight:400;font-size:.8rem;">ID: ${esc(row['ID'])}</span></h4>
+          <div class="field-label">Asunto</div>
+          <div class="field-value" style="margin-bottom:8px;">${esc(row['Email Subject'])}</div>
+          <div class="field-label">Cuerpo</div>
+          <div class="field-value">${esc(row['Email Body'])}</div>
+          <div style="margin-top:12px;display:flex;gap:8px;">
+            <button class="btn btn-green btn-sm" onclick="reviewDecision('${esc(row['ID'])}', true)">Aprobar</button>
+            <button class="btn btn-red btn-sm" onclick="reviewDecision('${esc(row['ID'])}', false)">Rechazar</button>
+            <button class="btn btn-outline btn-sm" style="border-color:#ef4444;color:#ef4444;" onclick="deleteOutput('${esc(row['ID'])}', loadReview)">Borrar</button>
+          </div>
+        </div>
+      `;
+    }
+    container.innerHTML = html;
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+async function reviewDecision(leadId, approved) {
+  try {
+    // Use direct Excel update for already-written pending items
+    const excel_url = `/api/approve`;
+    // Pending items in the Excel output sheet need a different approach:
+    // We need to write them through the approve endpoint.
+    // But these are already IN Excel with status "pending" — they don't live in pending_content.
+    // We'll handle this by making a direct call.
+    // Actually, the review section shows items that are already in Excel as "pending".
+    // The /api/approve endpoint looks in pending_content (memory), not Excel.
+    // We need a separate mechanism. Let me use a direct update approach.
+
+    // For items already in Excel, we update approval directly
+    const res = await fetch('/api/review-approve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lead_id: leadId, approved }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Error');
+    toast(approved ? 'Aprobado' : 'Rechazado', approved ? 'success' : 'info');
+    loadReview();
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SEND
+   ═══════════════════════════════════════════ */
+async function loadUnsent() {
+  try {
+    const unsent = await api('/api/unsent');
+    const container = document.getElementById('send-list');
+    const batchBtn = document.getElementById('batch-send-btn');
+
+    if (!unsent.length) {
+      container.innerHTML = '<div class="empty-state">No hay correos aprobados pendientes de envio.</div>';
+      batchBtn.disabled = true;
+      return;
+    }
+    batchBtn.disabled = false;
+
+    let html = `<table><thead><tr>
+      <th>ID</th><th>Contacto</th><th>Asunto</th><th>Accion</th>
+    </tr></thead><tbody>`;
+    for (const row of unsent) {
+      html += `<tr>
+        <td>${esc(row['ID'])}</td>
+        <td>${esc(row['Contact Name'])}</td>
+        <td>${esc(row['Email Subject'])}</td>
+        <td style="display:flex;gap:6px;">
+          <button class="btn btn-green btn-sm" onclick="sendOne('${esc(row['ID'])}')">Enviar</button>
+          <button class="btn btn-red btn-sm" onclick="deleteOutput('${esc(row['ID'])}', loadUnsent)">Borrar</button>
+        </td>
+      </tr>`;
+    }
+    html += '</tbody></table>';
+    container.innerHTML = html;
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+async function sendOne(leadId) {
+  try {
+    const data = await api('/api/send', { method: 'POST', body: { lead_id: leadId } });
+    toast(`Enviado a ${data.to}`, 'success');
+    loadUnsent();
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+async function sendBatch() {
+  const btn = document.getElementById('batch-send-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Enviando...';
+  try {
+    const data = await api('/api/send-batch', { method: 'POST' });
+    toast(`Enviados: ${data.sent} | Fallidos: ${data.failed}`, data.failed ? 'error' : 'success');
+    loadUnsent();
+  } catch (e) {
+    toast(e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Enviar Todos';
+  }
+}
+
+/* ═══════════════════════════════════════════
+   HISTORY
+   ═══════════════════════════════════════════ */
+async function loadHistory() {
+  try {
+    const outputs = await api('/api/outputs');
+    const container = document.getElementById('history-table');
+    if (!outputs.length) {
+      container.innerHTML = '<div class="empty-state">No hay historial de contenido generado.</div>';
+      return;
+    }
+    let html = `<table><thead><tr>
+      <th>ID</th><th>Contacto</th><th>Asunto</th><th>Fecha</th><th>Aprobado</th><th>Enviado</th><th>Acciones</th>
+    </tr></thead><tbody>`;
+    for (const row of outputs) {
+      const approvedStatus = String(row['Approved'] || 'pending').toLowerCase();
+      const sentStatus = String(row['Sent'] || 'no').toLowerCase();
+      html += `<tr>
+        <td>${esc(row['ID'])}</td>
+        <td>${esc(row['Contact Name'])}</td>
+        <td>${esc(row['Email Subject'])}</td>
+        <td style="font-size:.75rem;">${esc(row['Generated At'] || '')}</td>
+        <td>${statusBadge(approvedStatus)}</td>
+        <td>${sentStatus === 'yes' ? statusBadge('sent') : '<span class="badge badge-gray">No</span>'}</td>
+        <td style="display:flex;gap:6px;">
+          <button class="btn btn-outline btn-sm" onclick="showDetail(${JSON.stringify(row).replace(/"/g,'&quot;')})">Ver</button>
+          <button class="btn btn-red btn-sm" onclick="deleteOutput('${esc(row['ID'])}', loadHistory)">Borrar</button>
+        </td>
+      </tr>`;
+    }
+    html += '</tbody></table>';
+    container.innerHTML = html;
+  } catch (e) {
+    toast(e.message, 'error');
+  }
+}
+
+function showDetail(row) {
+  openModal(`
+    <h3>Detalle — ${esc(row['Contact Name'])} (ID: ${esc(row['ID'])})</h3>
+    <div class="field-label">Asunto</div>
+    <div class="field-value" style="margin-bottom:12px;">${esc(row['Email Subject'])}</div>
+    <div class="field-label">Cuerpo del Email</div>
+    <div class="field-value">${esc(row['Email Body'])}</div>
+    <div style="margin-top:12px;display:flex;gap:10px;">
+      <div><strong style="color:#64748b;font-size:.75rem;">Generado:</strong> ${esc(row['Generated At'] || '-')}</div>
+      <div><strong style="color:#64748b;font-size:.75rem;">Aprobado:</strong> ${esc(row['Approved'] || '-')}</div>
+      <div><strong style="color:#64748b;font-size:.75rem;">Enviado:</strong> ${esc(row['Sent'] || '-')}</div>
+    </div>
+  `);
+}
+
+/* ═══════════════════════════════════════════
+   AUTOPILOT
+   ═══════════════════════════════════════════ */
+function runAutopilot() {
+  const btn = document.getElementById('ap-btn');
+  const tier = document.getElementById('ap-tier').value;
+  const icp_rank = document.getElementById('ap-icp').value;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Procesando...';
+  document.getElementById('ap-result').innerHTML = `
+    <div class="preview-card" id="ap-progress-card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <span class="spinner"></span>
+        <span id="ap-progress-text" style="font-size:.9rem;">Iniciando autopilot...</span>
+      </div>
+      <div id="ap-progress-bar-wrap" style="background:#1a1e30;border-radius:6px;height:8px;overflow:hidden;margin-bottom:10px;">
+        <div id="ap-progress-bar" style="background:#3b82f6;height:100%;width:0%;transition:width .3s;"></div>
+      </div>
+      <div id="ap-progress-log" style="font-size:.8rem;color:#94a3b8;max-height:200px;overflow-y:auto;"></div>
+    </div>`;
+
+  let params = new URLSearchParams();
+  if (tier) params.set('tier', tier);
+  if (icp_rank) params.set('icp_rank', icp_rank);
+
+  const url = '/api/autopilot/stream' + (params.toString() ? '?' + params : '');
+  const evtSource = new EventSource(url);
+
+  evtSource.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+
+    if (data.event === 'progress') {
+      const pct = Math.round((data.current / data.total) * 100);
+      document.getElementById('ap-progress-text').textContent =
+        `Generando contenido: Lead ${data.current} de ${data.total}`;
+      document.getElementById('ap-progress-bar').style.width = pct + '%';
+
+      const statusIcon = data.status === 'approved' ? 'OK' : data.status === 'error' ? 'FALLO' : data.status === 'pending' ? 'PENDIENTE' : '...';
+      const logEl = document.getElementById('ap-progress-log');
+      logEl.innerHTML += `<div>[${data.current}/${data.total}] ${esc(data.lead_name)} — ${statusIcon}</div>`;
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    if (data.event === 'done') {
+      evtSource.close();
+      btn.disabled = false;
+      btn.textContent = 'Ejecutar Autopilot';
+
+      const msg = `Autopilot completado: ${data.approved} aprobados, ${data.pending} pendientes, ${data.errors} errores, ${data.skipped} omitidos`;
+      toast(msg, data.errors > 0 ? 'error' : 'success');
+
+      document.getElementById('ap-result').innerHTML = `
+        <div class="preview-card">
+          <h3>Resultado del Autopilot</h3>
+          <div class="stats-grid" style="margin-top:12px;">
+            <div class="stat-card green"><div class="label">Aprobados</div><div class="value">${data.approved}</div></div>
+            <div class="stat-card amber"><div class="label">Pendientes</div><div class="value">${data.pending}</div></div>
+            <div class="stat-card red"><div class="label">Errores</div><div class="value">${data.errors}</div></div>
+            <div class="stat-card"><div class="label">Omitidos</div><div class="value">${data.skipped}</div></div>
+          </div>
+        </div>`;
+      loadDashboard();
+    }
+
+    if (data.event === 'error') {
+      evtSource.close();
+      btn.disabled = false;
+      btn.textContent = 'Ejecutar Autopilot';
+      document.getElementById('ap-result').innerHTML = '';
+      toast(data.detail || 'Error en autopilot', 'error');
+    }
+  };
+
+  evtSource.onerror = function() {
+    evtSource.close();
+    btn.disabled = false;
+    btn.textContent = 'Ejecutar Autopilot';
+    toast('Se perdio la conexion con el servidor', 'error');
+  };
+}
+
+/* ─── INIT ─── */
+const hash = location.hash.replace('#', '') || 'dashboard';
+navigate(hash);
+</script>
+</body>
+</html>

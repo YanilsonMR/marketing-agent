@@ -1,0 +1,15 @@
+Subject: Una reflexion sobre tendencias en {industry}
+---
+Hola {contact_first_name},
+
+Se que no estan contratando activamente en este momento, y esto no es un pitch.
+
+He estado siguiendo como las empresas de {industry} estan abordando su estrategia de talento este anio, y un patron resalta: los equipos que construyen relaciones con reclutadores especializados entre ciclos de contratacion terminan llenando posiciones un 40-60% mas rapido cuando la necesidad surge.
+
+En {company_name}, {company_description} Si eso alguna vez se vuelve relevante para {lead_company_name}, con gusto podemos ayudar.
+
+Sin prisa, sin presion. Solo queria dejarlo en tu radar.
+
+{sender_name}
+{sender_title}
+{company_name}

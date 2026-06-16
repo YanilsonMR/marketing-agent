@@ -1,0 +1,44 @@
+# ── Secretos y credenciales ──
+.env
+.env.*
+!.env.example
+
+# ── Datos reales (contienen info de leads/clientes) ──
+leads.xlsx
+quality_log.csv
+*.csv
+!tests/*.csv
+
+# ── Python ──
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+env/
+
+# ── Testing ──
+.pytest_cache/
+htmlcov/
+.coverage
+
+# ── IDEs ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Sistema ──
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Logs ──
+*.log
+
+# ── Claude Code ──
+.claude/

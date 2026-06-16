@@ -1,0 +1,13 @@
+Subject: Para la proxima ronda de contratacion en {lead_company_name}
+---
+Hola {contact_first_name},
+
+Note que {lead_company_name} ha estado creciendo el equipo recientemente. Construir un equipo fuerte requiere esfuerzo real, asi que felicidades por el progreso.
+
+Cuando surja la proxima necesidad de contratacion, tener un pipeline pre-construido de candidatos evaluados hace una gran diferencia. En {company_name}, {company_description}
+
+Hemos ayudado a empresas como la tuya a reducir significativamente el tiempo de contratacion. Con gusto podemos ser un recurso cuando esten listos para la siguiente ronda.
+
+{sender_name}
+{sender_title}
+{company_name}
